@@ -1,0 +1,84 @@
+﻿@model ITNews.View.Models.News
+
+@{
+    ViewBag.Title = "Details";
+
+    var ratingCount = ViewBag.RatingCount;
+    var totalRating = ViewBag.TotalRating;
+    var avgRating = ViewBag.AvgRating;
+}
+
+
+<div class="container">
+    <div class="col-lg-12">
+        <h1 class="well text-center"><b>@Model.Title</b></h1>
+        <h3>
+            by
+            @Html.ActionLink(Model.Author.Username, "Details", "Author", new { username = Model.Author.Username }, null)
+            <small>
+                Likes
+                @Model.Author.Likes
+            </small>
+        </h3>
+        <div>
+            <span class="starFadeN" id="sRate1"></span>
+            <span class="starFadeN" id="sRate2"></span>
+            <span class="starFadeN" id="sRate3"></span>
+            <span class="starFadeN" id="sRate4"></span>
+            <span class="starFadeN" id="sRate5"></span>
+            <div>average rating <b>@avgRating</b> of <b>@ratingCount</b> votes</div>
+        </div>
+        <hr>
+        <p class="lead">
+            <b>Category</b>
+            <a href="#">@Model.Category.FirstOrDefault()</a>
+        </p>
+        <hr>
+        <p><b> @Model.Summary </b> </p>
+        <hr>
+        <p><b>Posted:</b> @Model.NewsCreated</p>
+        <hr>
+        <p class="lead">@Html.Raw(Model.Content)</p>
+        <hr />
+        <p>
+            @Html.Action("AddRating", "News", new { NewsId = Model.NewsId })
+        </p>
+        <hr>
+        <div>
+            <h4>Leave a Comment:</h4>
+            @Html.Action("Create", "Comment", new { NewsId = Model.NewsId })
+        </div>
+        <p><span class="badge">@Model.Comments.Count()</span> Comments:</p><br>
+        @foreach (var item in Model.Comments)
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    <h5>@item.Author.Username @item.Author.Likes Likes <small>@item.CommentCreated</small></h5>
+                    <p>@item.Content</p>
+                    @if (item.AuthorId == Model.AuthorId)
+                    {@Html.ActionLink("Delete", "Delete", "Comment", new { commentId = item.CommentId, newsId = item.NewsId }, new { @class = "btn btn-danger btn-xs" })}
+                    @Html.ActionLink("Like", "Like", "Author",new {authorId = item.AuthorId, newsId = item.NewsId } ,new { @class = "btn btn-success btn-xs" })
+                </div>
+            </div>
+            <br>
+        }
+        <hr>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.NewsId }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    </div>
+   
+</div>
+
+
+<script>
+    function SCRate() {
+        for (var i =1; i <= @totalRating; i++) {
+            $("#sRate" + i).attr('class', 'starGlowN');
+        }
+    }
+    $(function(){
+        SCRate();
+    });
+</script>

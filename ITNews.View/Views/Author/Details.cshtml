@@ -1,0 +1,122 @@
+﻿@model ITNews.View.Models.Author
+
+@Html.HiddenFor(model => model.AuthorId)
+<div class="container">
+    <div class="col-lg-4">
+        <h2>Author @Model.Username <small>Likes @Model.Likes</small></h2>
+        <hr />
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>Firstname</b></div>
+                <div class="panel-body" id="firstname" data-placement="right" data-title="Enter Firstname" data-pk="@Model.AuthorId">@Model.Firstname</div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>Lastname</b></div>
+                <div class="panel-body" id="lastname" data-placement="right" data-title="Enter Lastname" data-pk="@Model.AuthorId">@Model.Lastname</div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>Email</b></div>
+                <div class="panel-body">@Model.Email</div>
+            </div>
+        </div>
+    </div>
+
+   
+    <div class="col-lg-12">
+        <input class="form-control" id="myInput" type="text" placeholder="Search..">
+        <br>
+        <table class="table table-hover">
+            <tr>
+                <th>
+                    @Html.ActionLink("Date of creation", "Details", new { sort = ViewBag.DateSortParam })
+                </th>
+                <th>
+                    <b>Author</b>
+                </th>
+                <th>
+                    <b>Title</b>
+                </th>
+                <th>
+                    <b>Summary</b>
+                </th>
+                <th>
+                    <b>Category</b>
+                </th>
+
+                <th></th>
+            </tr>
+            <tbody id="myTable">
+                @foreach (var item in Model.News)
+                {
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NewsCreated)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Author.Username)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Summary)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category)
+                        </td>
+
+                        <td>
+                            <a href="@Url.Action("Details","News",new {id = item.NewsId})"><span><i class="glyphicon glyphicon-list-alt"></i></span></a> |
+                            <a href="@Url.Action("Edit","News",new {id = item.NewsId})"><span><i class="glyphicon glyphicon-pencil"></i></span></a> |
+                            <a href="@Url.Action("Delete","News",new {id = item.NewsId})"><span><i class="glyphicon glyphicon-trash"></i></span></a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="~/Scripts/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script src="~/Scripts/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
+
+<script type="text/javascript">
+$('#firstname').editable({
+            type:'text',
+            url: '@Url.Action("Edit","Author")',                 
+});
+ $('#lastname').editable({
+            type:'text',
+            url:'@Url.Action("Edit","Author")',  
+    });
+
+
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+       
+
+
+
+

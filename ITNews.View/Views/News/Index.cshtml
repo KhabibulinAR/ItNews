@@ -1,0 +1,95 @@
+﻿@model IEnumerable<ITNews.View.Models.News>
+
+@{
+    ViewBag.Title = "Index";
+    
+}
+
+<div class="container">
+    <div class="jumbotron">
+        <h1>Main Page</h1>
+        <p>News List</p>
+    </div>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    @*<p>Find by Title and Summary</p>
+        @using (Html.BeginForm("Index", "News", FormMethod.Get))
+        {
+        <p>
+            @Html.TextBox("search") <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search</button>
+        </p>
+        }*@
+    <input class="form-control" id="myInput" type="text" placeholder="Search..">
+    <br>
+
+    <table class="table table-hover">
+        <tr>
+            <th>
+                @Html.ActionLink("Date of creation", "Index", new { sort = ViewBag.DateSortParam })
+            </th>
+            <th>
+                @Html.ActionLink("Author", "Index", new { sort = ViewBag.AuthorSortParam })
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Summary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+
+            @*<th>
+                    @Html.DisplayNameFor(model => model.Rating)
+                </th>*@
+            <th></th>
+        </tr>
+        <tbody id="myTable">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NewsCreated)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author.Username)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Summary)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category)
+                    </td>
+
+                    <td>
+
+                        <a href="@Url.Action("Details", new {id = item.NewsId})"><span><i class="glyphicon glyphicon-list-alt"></i></span></a> |
+                        <a href="@Url.Action("Edit", new {id = item.NewsId})"><span><i class="glyphicon glyphicon-pencil"></i></span></a> |
+                        <a href="@Url.Action("Delete", new {id = item.NewsId})"><span><i class="glyphicon glyphicon-trash"></i></span></a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
